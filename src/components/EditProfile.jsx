@@ -44,100 +44,133 @@ const EditProfile = ({ user }) => {
     }
   };
   return (
-    //EDIT FORM (SIMILIAR AS SIGNUP)
-    <>
-      <div className="flex justify-center my-10">
-        <div className="flex justify-center mx-10 mb-20">
-          <div className="card card-border bg-base-300 w-96">
-            <div className="card-body">
-              <h2 className="card-title">Edit Profile</h2>
+ <>
+  <div className="min-h-screen bg-black text-white px-4 py-12">
+    <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-12 items-start justify-center">
 
-              {/* {error && <p className="text-red-500 mb-2">{error}</p>} */}
+      {/* EDIT FORM */}
+      <div className="w-full lg:w-1/2 bg-zinc-900 border border-zinc-800 rounded-2xl p-8 shadow-xl">
 
-              <fieldset className="fieldset">
-                <legend className="fieldset-legend">Name</legend>
-                <input
-                  type="text"
-                  value={name}
-                  className="input"
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </fieldset>
+        <h2 className="text-2xl font-bold mb-6 text-center">
+          Edit Profile
+        </h2>
 
-              <fieldset className="fieldset">
-                <legend className="fieldset-legend">Age</legend>
-                <input
-                  type="text"
-                  value={age}
-                  className="input"
-                  onChange={(e) => setAge(e.target.value)}
-                />
-              </fieldset>
+        <div className="space-y-5">
 
-              <fieldset className="fieldset">
-                <legend className="fieldset-legend">PhotoUrl</legend>
-                <input
-                  type="text"
-                  value={photoUrl}
-                  className="input"
-                  onChange={(e) => setPhotoUrl(e.target.value)}
-                />
-              </fieldset>
-
-              <fieldset className="fieldset">
-                <legend className="fieldset-legend">Gender</legend>
-                <input
-                  type="text"
-                  value={gender}
-                  className="input"
-                  onChange={(e) => setGender(e.target.value)}
-                />
-              </fieldset>
-
-              <fieldset className="fieldset">
-                <legend className="fieldset-legend">About</legend>
-                <input
-                  type="text"
-                  value={about}
-                  className="input"
-                  onChange={(e) => setAbout(e.target.value)}
-                />
-              </fieldset>
-
-              <fieldset className="fieldset">
-                <legend className="fieldset-legend">Skills</legend>
-                <input
-                  type="text"
-                  value={skills}
-                  className="input"
-                  onChange={(e) => setSkills(e.target.value)}
-                />
-              </fieldset>
-              <p className="text text-red-500">{error}</p>
-              <div className="flex justify-center">
-                <button
-                  className="btn btn-primary my-5"
-                  onClick={handleSaveProfile}
-                >
-                  Save Profile
-                </button>
-              </div>
-            </div>
+          <div>
+            <label className="block text-sm text-zinc-400 mb-1">
+              Name
+            </label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-white/30"
+            />
           </div>
+
+          <div>
+            <label className="block text-sm text-zinc-400 mb-1">
+              Age
+            </label>
+            <input
+              type="text"
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-white/30"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-zinc-400 mb-1">
+              Photo URL
+            </label>
+            <input
+              type="text"
+              value={photoUrl}
+              onChange={(e) => setPhotoUrl(e.target.value)}
+              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-white/30"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-zinc-400 mb-1">
+              Gender
+            </label>
+            <input
+              type="text"
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-white/30"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-zinc-400 mb-1">
+              About
+            </label>
+            <textarea
+              value={about}
+              onChange={(e) => setAbout(e.target.value)}
+              rows="3"
+              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-white/30"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-zinc-400 mb-1">
+              Skills (comma separated)
+            </label>
+            <input
+              type="text"
+              value={skills}
+              onChange={(e) => setSkills(e.target.value)}
+              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-white/30"
+            />
+          </div>
+
+          {error && (
+            <p className="text-red-500 text-sm">{error}</p>
+          )}
+
+          <button
+            onClick={handleSaveProfile}
+            className="w-full bg-white text-black font-semibold py-3 rounded-lg hover:bg-gray-300 transition mt-4"
+          >
+            Save Profile
+          </button>
+
         </div>
+      </div>
+
+      {/* LIVE PREVIEW */}
+      <div className="w-full lg:w-1/2 flex justify-center">
         <Usercard
-          user={{ name, age, photoUrl, gender, about, skills, email }}
+          user={{
+            name,
+            age,
+            photoUrl,
+            gender,
+            about,
+            skills,
+            email,
+          }}
         />
       </div>
-      {showToast && (
-      <div className="toast toast-top toast-center">
-  <div className="alert alert-success">
-    <span>{notif}</span>
+
+    </div>
   </div>
-</div>
-      )}  
-    </>
+
+  {/* TOAST */}
+  {showToast && (
+    <div className="fixed top-6 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg">
+      {notif}
+    </div>
+  )}
+</>
   );
 };
 
 export default EditProfile;
+
+
