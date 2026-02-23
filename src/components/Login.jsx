@@ -1,84 +1,108 @@
+
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/userSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
-import { Link } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userData = useSelector((store) => store.user);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error,setError] = useState("");
+  const [error, setError] = useState("");
 
-
-  useEffect(()=>{
-    if(userData){
-      return navigate("/feed");
+  useEffect(() => {
+    if (userData) {
+      navigate("/feed");
     }
-  },[userData]);
+  }, [userData, navigate]);
 
+  const handleLogin = async () => {
+    try {
+      const res = await axios.post(
+        BASE_URL + "/login",
+        { email, password },
+        { withCredentials: true }
+      );
 
-const handleLogin = async () => {
-  try {
-    const res = await axios.post(
-      BASE_URL + "/login",
-      { email, password },
-      { withCredentials: true }
-    );
+      if (res.data.success) {
+        alert("Welcome Back! " + res.data.user.name);
+        dispatch(addUser(res.data.user));
+        navigate("/feed");
+      }
+    } catch (err) {
+      setError(err?.response?.data?.message);
+      alert("Login failed");
+      console.log(err);
+    }
+  };
 
-    if (res.data.success) {
-      alert("Welcome Back! " + res.data.user.name);
-      dispatch(addUser(res.data.user));
-      return navigate("/feed");
-    } 
-  } catch (err) {
-    setError(err?.response?.data?.message);
-    alert("Login failed");
-    console.log(err); 
-  }
-};
   return (
-    <div className="flex justify-center mt-10">
-      <div className="card card-border bg-base-300 w-96">
-        <div className="card-body">
-          <h2 className="card-title">Login</h2>
-          <div>
-            <fieldset className="fieldset">
-              <legend className="fieldset-legend">Email ID: {email}</legend>
+    <div
+      className="relative min-h-screen flex items-center justify-center bg-cover bg-center"
+      style={{
+        backgroundImage:
+          "url('https://media.istockphoto.com/id/2057860611/photo/fingerprint-icon-on-digital-screen.jpg?b=1&s=1024x1024&w=0&k=20&c=en5bHJ8el8ShFweMPQwhR1P_gBjCr2fMANlxzp9qK9Q=')"
+      }}
+    >
+      {/* Dark Overlay for readability */}
+      <div className="absolute inset-0 bg-black/70"></div>
+
+      {/* Login Card */}
+      <div className="relative z-10 w-full max-w-md px-6">
+        <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg p-8 text-white shadow-lg">
+
+          <h2 className="text-3xl font-bold mb-6 text-center">
+            Welcome Back!
+          </h2>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm mb-1">Email</label>
               <input
                 type="text"
                 value={email}
-                className="input"
-                placeholder="Email"
+                placeholder="Enter your email"
                 onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-2 bg-black/60 border border-gray-600 rounded focus:outline-none focus:border-white"
               />
-            </fieldset>
-          </div>
-          <div>
-            <fieldset className="fieldset">
-              <legend className="fieldset-legend">Password : {password}</legend>
+            </div>
+
+            <div>
+              <label className="block text-sm mb-1">Password</label>
               <input
                 type="password"
                 value={password}
-                className="input"
-                placeholder="Password"
+                placeholder="Enter your password"
                 onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-2 bg-black/60 border border-gray-600 rounded focus:outline-none focus:border-white"
               />
-            </fieldset>
-          </div>
-          <p className="text-red-500">{error}</p>
-          <div className="flex justify-between">
-            <button className="btn btn-primary my-5 bg-amber-600" onClick={handleLogin}>
+            </div>
+
+            {error && (
+              <p className="text-red-400 text-sm">{error}</p>
+            )}
+
+            <button
+              onClick={handleLogin}
+              className="w-full bg-white text-black py-2 font-semibold rounded hover:bg-gray-300 transition"
+            >
               Login
             </button>
-            <button className="btn btn-success my-5 text-white"><Link to="/signup">New User?</Link></button>
+
+            <p className="text-sm text-center mt-4">
+              New user?{" "}
+              <Link to="/signup" className="underline hover:text-gray-300">
+                Create Account
+              </Link>
+            </p>
           </div>
+
         </div>
       </div>
     </div>

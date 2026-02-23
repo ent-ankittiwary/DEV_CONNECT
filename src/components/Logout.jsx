@@ -11,7 +11,7 @@ const Logout = () => {
     const handleLogOut=async()=>{
         const logOut = await axios.post(BASE_URL+"/logout",{},{withCredentials:true});
         dispatch(removeUser());
-        return navigate("/login");
+        return navigate("/");
     }
     useEffect(()=>{
         handleLogOut();

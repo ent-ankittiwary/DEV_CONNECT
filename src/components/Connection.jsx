@@ -1,104 +1,8 @@
-// import axios from "axios";
-// import React, { useEffect } from "react";
-// import { BASE_URL } from "../utils/constants";
-// import { addConnections } from "../utils/connectionSlice";
-// import { useDispatch, useSelector } from "react-redux";
-
-// const Connection = () => {
-//   const dispatch = useDispatch();
-//   const connections = useSelector((store) => store.connections);
-//   const user = useSelector((store) => store.user);
-//   console.log(connections);
-//   const fetchConnections = async () => {
-//     try {
-//       const res = await axios.get(BASE_URL + "/accepted/connections", {
-//         withCredentials: true,
-//       });
-//       console.log(res?.data?.data);
-//       dispatch(addConnections(res?.data?.data));
-//     } catch (err) {
-//       console.log(err.message);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchConnections();
-//   }, []);
-
-// //   if (!connections) {
-// //     return ;
-// //   }
-//   if (connections.length<=0) {
-//     return <h1>No Connections found</h1>;
-//   }
-//   if (!Array.isArray(connections)) return null;
-// // console.log("isArray =", Array.isArray(connections));
-
-
-//   return (
-//     <div className="text-center my-10">
-//       <h1 className="text-bold text-2xl">My Connections</h1>
-
-//       {connections &&
-//         user &&
-//         connections.map((connection) => {
-//             console.log(connection);
-//           const fromId = String(connection.fromUserId._id);
-//           const loggedInId = String(user._id);
-//           const toId = String(connection.toUserId._id);
-
-//           let otherUser = null;
-
-//           if (fromId === loggedInId) {
-//             otherUser = connection.toUserId;
-//           } else if (toId === loggedInId) {
-//             otherUser = connection.fromUserId;
-//           } else {
-//             return null; // safety guard
-//           }
-
-//           const { name, age, photoUrl, gender, about, skills } = otherUser;
-//           return (
-//             <div
-//               key={connection._id}
-//               className=" flex gap-4 m-4 p-4 rounded-lg bg-base-200 w-1/2 mx-auto"
-//             >
-//               <div className="my-1">
-//                 <img
-//                   className="w-20 h-20 rounded-full"
-//                   alt="User-Img"
-//                   src={photoUrl}
-//                 />
-//               </div>
-//               <div className="text-left mx-4">
-//                 <h2 className="font-bold text-xl">{name}</h2>
-//                 {age && gender && (
-//                   <p className="font-medium text-shadow-white">
-//                     {age + "," + gender}
-//                   </p>
-//                 )}
-//                 <p className="font-normal">{about}</p>
-//                 <p className="font-light">{skills + ""}</p>
-//               </div>
-//             </div>
-//           );
-//         })}
-//     </div>
-//   );
-// };
-
-// export default Connection;
-
-
-
-
-
 import axios from "axios";
 import React, { useEffect } from "react";
 import { BASE_URL } from "../utils/constants";
 import { addConnections, removeConnection } from "../utils/connectionSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 
 const Connection = () => {
   const dispatch = useDispatch();
@@ -116,107 +20,138 @@ const Connection = () => {
     }
   };
 
-  const deleteConnection = async(id)=>{
-
-
-
-    try{
-      const res = await axios.delete(BASE_URL+"/accepted/connection/delete/"+id,{withCredentials:true});
-      console.log(res.data);
-      dispatch(removeConnection(res.data));
+  const deleteConnection = async (id) => {
+    try {
+      const res = await axios.delete(
+        BASE_URL + "/accepted/connection/delete/" + id,
+        { withCredentials: true },
+      );
+      dispatch(removeConnection(id));
       alert(res.data.message);
+    } catch (err) {
+      console.log(err.message);
     }
-  catch(err){
-    console.log(err.message);
-  }
-
-}
-
-useEffect(()=>{
-  if(!connections){
-    fetchConnections();
-  }
-},[connections]);
-
-
-
-
+  };
 
   useEffect(() => {
     fetchConnections();
-  }, []);
+  }, [connections]);
 
-  //  FIRST: must be array
   if (!Array.isArray(connections)) return null;
 
-  // empty state
   if (connections.length === 0) {
-    return <h1>No Connections found</h1>;
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center text-white text-2xl">
+        No Connections Found
+      </div>
+    );
   }
 
-  //  wait for user
   if (!user) return null;
 
   return (
-    <div className="text-center my-10">
-      <h1 className="text-bold text-2xl">My Connections</h1>
+    <div className="min-h-screen bg-black text-white px-4 py-12">
+      <div className="max-w-5xl mx-auto">
+        {/* Page Title */}
+        <h1 className="text-3xl sm:text-4xl font-bold text-center mb-12">
+          My Connections
+        </h1>
 
-      {connections.map((connection) => {
-        //  GUARD: skip broken records
-        if (!connection.fromUserId || !connection.toUserId) {
-          console.warn("Skipping invalid connection:", connection);
-          return null;
-        }
-        const connectionId = connection._id;
+        {/* Connection Cards */}
+        <div className="space-y-8">
+          {connections.map((connection) => {
+            if (!connection.fromUserId || !connection.toUserId) return null;
 
-        const fromId = String(connection.fromUserId._id);
-        const toId = String(connection.toUserId._id);
-        const loggedInId = String(user._id);
+            const connectionId = connection._id;
 
-        let otherUser = null;
+            const fromId = String(connection.fromUserId._id);
+            const toId = String(connection.toUserId._id);
+            const loggedInId = String(user._id);
 
-        if (fromId === loggedInId) {
-          otherUser = connection.toUserId;
-        } else if (toId === loggedInId) {
-          otherUser = connection.fromUserId;
-        } else {
-          return null;
-        }
+            let otherUser = null;
 
-        //  FINAL SAFETY
-        if (!otherUser) return null;
+            if (fromId === loggedInId) {
+              otherUser = connection.toUserId;
+            } else if (toId === loggedInId) {
+              otherUser = connection.fromUserId;
+            } else {
+              return null;
+            }
 
-        const { _id,name, age, photoUrl, gender, about, skills } = otherUser;
+            if (!otherUser) return null;
 
-        return (
-          <div
-            key={connection._id}
-            className="flex gap-4 m-4 p-4 rounded-lg bg-base-200 w-1/2 mx-auto"
-          >
-            <div className="my-1">
-              <img
-                className="w-20 h-20 rounded-full"
-                alt="User-Img"
-                src={photoUrl}
-              />
-            </div>
+            const { name, age, photoUrl, gender, about, skills } = otherUser;
 
-            <div className="text-left mx-4">
-              <h2 className="font-bold text-xl">{name}</h2>
-              {age && gender && (
-                <p className="font-medium">
-                  {age}, {gender}
-                </p>
-              )}
-              <p className="font-normal">{about}</p>
-              <p className="font-light">{skills + ""}</p>
-            </div>
-            <div className="ml-auto flex items-center">
-              <button className="btn btn-secondary" onClick={()=>deleteConnection(connectionId)} >Remove</button>
-            </div>
-          </div>
-        );
-      })}
+            return (
+              <div
+                key={connectionId}
+                className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl transition hover:border-zinc-700"
+              >
+                <div className="flex flex-col md:flex-row items-center gap-6">
+                  {/* Avatar */}
+                  <div className="flex-shrink-0">
+                    <div className="w-24 h-24 rounded-full overflow-hidden border border-zinc-700">
+                      <img
+                        src={
+                          photoUrl ||
+                          "https://dummyimage.com/200x200/000/fff&text=User"
+                        }
+                        alt="User"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  </div>
+
+                  {/* User Info */}
+                  <div className="flex-1 text-center md:text-left space-y-2">
+                    <h2 className="text-xl font-semibold">{name}</h2>
+
+                    {age && gender && (
+                      <p className="text-sm text-zinc-400">
+                        {age}, {gender}
+                      </p>
+                    )}
+
+                    {about && (
+                      <p className="text-sm text-zinc-300 leading-relaxed">
+                        {about}
+                      </p>
+                    )}
+
+                    {skills && (
+                      <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+                        {(Array.isArray(skills)
+                          ? skills
+                          : typeof skills === "string"
+                            ? skills.split(",")
+                            : []
+                        ).map((skill, index) => (
+                          <span
+                            key={index}
+                            className="bg-zinc-800 text-xs px-3 py-1 rounded-full"
+                          >
+                            {skill.trim()}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Remove Button */}
+                  <div className="w-full md:w-auto">
+                    <button
+                      onClick={() => deleteConnection(connectionId)}
+                      className="w-full md:w-auto px-6 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 };

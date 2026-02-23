@@ -34,14 +34,20 @@ const Body =()=>{
 
    
 
-    return(
-    
-        <div>
-            <Navbar/>
-            <Outlet/>  {/*This will render child routes of body always below the navbar*/}
-            <Footer/>
-        </div>
-    )
+   return (
+  <div className="min-h-screen flex flex-col">
+
+    <Navbar />
+
+    {/* Main Content */}
+    <main className="flex-grow">
+      <Outlet />
+    </main>
+
+    <Footer />
+
+  </div>
+);
 }
 
 export default Body;

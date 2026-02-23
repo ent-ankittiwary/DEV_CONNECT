@@ -1,252 +1,26 @@
-// import {useEffect, useState} from "react";
-// import axios from "axios";
-// import { addUser } from "../utils/userSlice";
-// import { BASE_URL } from "../utils/constants";
-// import { useNavigate } from "react-router-dom";
-// import { useDispatch, useSelector } from "react-redux";
-
-
-
-// const Signup = ()=>{
-//   const dispatch = useDispatch();
-//   const navigate =useNavigate();
-//   const userData = useSelector((store)=>store.user);
-
-// useEffect(()=>{
-//     if(userData){
-//       return navigate("/feed")
-//     }
-//   },[userData]);
-
-//     const [name,setName] = useState("");
-//     const [age,setAge] = useState("");
-//     const [photoUrl,setPhotoUrl] = useState("");
-//     const [email,setEmail] = useState("");
-//     const [password,setPassword] = useState("");
-
-//     const handleSignup =async()=>{
-
-//         try{
-//             const res = await axios.post(BASE_URL+"/signup",{
-//                 name,
-//                 age,
-//                 photoUrl,
-//                 email,
-//                 password
-//             },{withCredentials:true})
-//             console.log(res);
-//             if(res.data.success){
-//               alert("You are successfuly registered "+name+"! ."+" Please Login Now");
-//               dispatch(addUser(res.data.cust1));
-//               console.log(res.data);
-//               navigate("/feed");
-//             }
-//             else{
-//               alert("Something went wrong");
-//               throw new Error("check all feilds,if already registered please Login")
-//             }
-//         }
-//         catch(err){
-//             console.error(err);
-//         }
-//     }
-        
-
-//     return(
-//             <div className="flex justify-center mt-5 mb-20">
-//       <div className="card card-border bg-base-300 w-96">
-//         <div className="card-body">
-//           <h2 className="card-title">Register Yourself here!</h2>
-//           <div>
-//             <fieldset className="fieldset">
-//               <legend className="fieldset-legend">Name: {name}</legend>
-//               <input type="text" value={name} className="input" placeholder="Name" onChange={(e)=>setName(e.target.value)}/>
-//             </fieldset>
-//           </div>
-//           <div>
-//             <fieldset className="fieldset">
-//               <legend className="fieldset-legend">Age: {age}</legend>
-//               <input type="text" value={age} className="input" placeholder="Age" onChange={(e)=>setAge(e.target.value)} />
-//             </fieldset>
-//           </div>
-//           <div>
-//             <fieldset className="fieldset">
-//               <legend className="fieldset-legend">PhotoUrl: {photoUrl}</legend>
-//               <input type="text" value={photoUrl} className="input" placeholder="Paste image URL here" onChange={(e)=>setPhotoUrl(e.target.value)} />
-//             </fieldset>
-//           </div>
-//           <div>
-//             <fieldset className="fieldset">
-//               <legend className="fieldset-legend">Email ID : {email}</legend>
-//               <input type="text" value={email} className="input" placeholder="Email" onChange={(e)=>setEmail(e.target.value)} />
-//             </fieldset>
-//           </div>
-//           <div>
-//             <fieldset className="fieldset">
-//               <legend className="fieldset-legend">Password : {password}</legend>
-//               <input type="text" value={password} className="input" placeholder="Password" onChange={(e)=>setPassword(e.target.value)} />
-//             </fieldset>
-//           </div>
-//           <div className="flex justify-center">
-//           <button className="btn btn-primary my-5" onClick={handleSignup}>Signup</button>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//     )
-// }
-
-// export default Signup;
-
-
-
-
-// // import { useState } from "react";
-// // import axios from "axios";
-// // import { BASE_URL } from "../utils/constants";
-// // import { useNavigate } from "react-router-dom";
-// // import { useDispatch } from "react-redux";
-
-// // const Signup = () => {
-// //   const navigate = useNavigate();
-// //   const dispatch = useDispatch();
-
-// //   const [name, setName] = useState("");
-// //   const [age, setAge] = useState("");
-// //   const [photoUrl, setPhotoUrl] = useState("");
-// //   const [email, setEmail] = useState("");
-// //   const [password, setPassword] = useState("");
-
-// //   const handleSignup = async () => {
-// //     try {
-// //       const res = await axios.post(
-// //         BASE_URL + "/signup",
-// //         {
-// //           name,
-// //           age,
-// //           photoUrl,
-// //           email,
-// //           password,
-// //         },
-// //         { withCredentials: true }
-// //       );
-
-// //       // ✅ check proper success flag from backend
-// //       if (res.data.success) {
-// //         alert("You are successfully registered, " + res.data.cust1.name + "!");
-// //         dispatch(addUser(res.data.cust1));
-// //         // navigate("/login"); // go to login page after signup
-// //       } else {
-// //         alert(res.data.message || "Signup failed");
-// //       }
-
-// //     } catch (err) {
-// //       console.error(err);
-// //       alert("Signup failed");
-// //     }
-// //   };
-
-// //   return (
-// //     <div className="flex justify-center mt-5 mb-20">
-// //       <div className="card card-border bg-base-300 w-96">
-// //         <div className="card-body">
-// //           <h2 className="card-title">Register Yourself here!</h2>
-
-// //           <fieldset className="fieldset">
-// //             <legend className="fieldset-legend">Name</legend>
-// //             <input
-// //               type="text"
-// //               value={name}
-// //               className="input"
-// //               placeholder="Name"
-// //               onChange={(e) => setName(e.target.value)}
-// //             />
-// //           </fieldset>
-
-// //           <fieldset className="fieldset">
-// //             <legend className="fieldset-legend">Age</legend>
-// //             <input
-// //               type="text"
-// //               value={age}
-// //               className="input"
-// //               placeholder="Age"
-// //               onChange={(e) => setAge(e.target.value)}
-// //             />
-// //           </fieldset>
-
-// //           <fieldset className="fieldset">
-// //             <legend className="fieldset-legend">Photo URL</legend>
-// //             <input
-// //               type="text"
-// //               value={photoUrl}
-// //               className="input"
-// //               placeholder="Paste image URL"
-// //               onChange={(e) => setPhotoUrl(e.target.value)}
-// //             />
-// //           </fieldset>
-
-// //           <fieldset className="fieldset">
-// //             <legend className="fieldset-legend">Email</legend>
-// //             <input
-// //               type="text"
-// //               value={email}
-// //               className="input"
-// //               placeholder="Email"
-// //               onChange={(e) => setEmail(e.target.value)}
-// //             />
-// //           </fieldset>
-
-// //           <fieldset className="fieldset">
-// //             <legend className="fieldset-legend">Password</legend>
-// //             <input
-// //               type="password"
-// //               value={password}
-// //               className="input"
-// //               placeholder="Password"
-// //               onChange={(e) => setPassword(e.target.value)}
-// //             />
-// //           </fieldset>
-
-// //           <div className="flex justify-center">
-// //             <button className="btn btn-primary my-5" onClick={handleSignup}>
-// //               Signup
-// //             </button>
-// //           </div>
-// //         </div>
-// //       </div>
-// //     </div>
-// //   );
-// // };
-
-// // export default Signup;
-
-
-
-
-
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import signupbg from "../assets/signupbg.jpg";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const userData =useSelector((store)=>store.user);
+  const userData = useSelector((store) => store.user);
 
-
-  useEffect(()=>{
-    if(userData){
-      return navigate("/feed");
+  useEffect(() => {
+    if (userData) {
+      navigate("/feed");
     }
-  },[userData]);
+  }, [userData, navigate]);
 
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
-  const [gender,setGender] = useState("");
-  const [about,setAbout] = useState("");
-  const [skills,setSkills] = useState("");
+  const [gender, setGender] = useState("");
+  const [about, setAbout] = useState("");
+  const [skills, setSkills] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -258,77 +32,152 @@ const Signup = () => {
         {
           name,
           age,
+          gender,
           photoUrl,
           email,
           password,
         },
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       if (res.data.success) {
-        alert("You are successfully registered, " + res.data.cust1.name + "! Please login.");
-        navigate("/login"); // ✅ go to login page
+        alert(
+          "You are successfully registered, " +
+            res.data.cust1.name +
+            "! Please login.",
+        );
+        navigate("/login");
       } else {
-        setError(res.data.message || "Signup failed");
+        setError(res?.data?.message );
       }
-
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.message || "Signup failed");
+      setError(err.response?.data?.message );
     }
   };
 
   return (
-    <div className="flex justify-center mt-5 mb-20">
-      <div className="card card-border bg-base-300 w-96">
-        <div className="card-body">
-          <h2 className="card-title">Register Yourself here!</h2>
+    <div
+      className="relative min-h-screen flex items-center justify-center bg-cover bg-center px-4"
+      style={{
+        backgroundImage: `url(${signupbg})`, // ✅ FIXED HERE
+      }}
+    >
+      {/* Dark Overlay */}
+      <div className="absolute inset-0 bg-black/70"></div>
 
-          {error && <p className="text-red-500 mb-2">{error}</p>}
+      {/* Signup Card */}
+      <div className="relative z-10 w-full max-w-2xl">
+        <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-6 sm:p-8 text-white shadow-xl">
+          <h2 className="text-3xl font-bold text-center mb-6">
+            Create Your Account
+          </h2>
 
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend">Name</legend>
-            <input type="text" value={name} className="input" onChange={(e)=>setName(e.target.value)} />
-          </fieldset>
+          {error && <p className="text-red-400 text-center mb-4">{error}</p>}
 
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend">Age</legend>
-            <input type="text" value={age} className="input" onChange={(e)=>setAge(e.target.value)} />
-          </fieldset>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm block mb-1">Name</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-4 py-2 bg-black/60 border border-gray-600 rounded focus:outline-none focus:border-white"
+              />
+            </div>
 
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend">Gender</legend>
-            <input type="text" value={gender} className="input" onChange={(e)=>setGender(e.target.value)} />
-          </fieldset>
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend">PhotoUrl</legend>
-            <input type="text" value={photoUrl} className="input" onChange={(e)=>setPhotoUrl(e.target.value)} />
-          </fieldset>
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend">About</legend>
-            <input type="text" value={about} className="input" onChange={(e)=>setAbout(e.target.value)} />
-          </fieldset>
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend">Skills</legend>
-            <input type="text" value={skills} className="input" onChange={(e)=>setSkills(e.target.value)} />
-          </fieldset>
+            <div>
+              <label className="text-sm block mb-1">Age</label>
+              <input
+                type="number"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+                className="w-full px-4 py-2 bg-black/60 border border-gray-600 rounded focus:outline-none focus:border-white"
+              />
+            </div>
 
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend">Email</legend>
-            <input type="text" value={email} className="input" onChange={(e)=>setEmail(e.target.value)} />
-          </fieldset>
+            <div>
+              <label className="text-sm block mb-1">Gender</label>
+              <select
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+                className="w-full px-4 py-2 bg-black/60 border border-gray-600 rounded focus:outline-none focus:border-white text-white"
+              >
+                <option value="" disabled className="bg-black text-gray-400">
+                  Select Gender
+                </option>
 
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend">Password</legend>
-            <input type="password" value={password} className="input" onChange={(e)=>setPassword(e.target.value)} />
-          </fieldset>
+                <option value="male" className="bg-black text-white">
+                  Male
+                </option>
 
-          <div className="flex justify-center">
-            <button className="btn btn-primary my-5" onClick={handleSignup}>
-              Signup
-            </button>
+                <option value="female" className="bg-black text-white">
+                  Female
+                </option>
+
+                <option value="other" className="bg-black text-white">
+                  Other
+                </option>
+              </select>
+            </div>
+
+            <div>
+              <label className="text-sm block mb-1">Photo URL</label>
+              <input
+                type="text"
+                value={photoUrl}
+                onChange={(e) => setPhotoUrl(e.target.value)}
+                className="w-full px-4 py-2 bg-black/60 border border-gray-600 rounded focus:outline-none focus:border-white"
+              />
+            </div>
+
+            <div className="sm:col-span-2">
+              <label className="text-sm block mb-1">About</label>
+              <input
+                type="text"
+                value={about}
+                onChange={(e) => setAbout(e.target.value)}
+                className="w-full px-4 py-2 bg-black/60 border border-gray-600 rounded focus:outline-none focus:border-white"
+              />
+            </div>
+
+            <div className="sm:col-span-2">
+              <label className="text-sm block mb-1">Skills</label>
+              <input
+                type="text"
+                value={skills}
+                onChange={(e) => setSkills(e.target.value)}
+                className="w-full px-4 py-2 bg-black/60 border border-gray-600 rounded focus:outline-none focus:border-white"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm block mb-1">Email</label>
+              <input
+                type="text"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-2 bg-black/60 border border-gray-600 rounded focus:outline-none focus:border-white"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm block mb-1">Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-2 bg-black/60 border border-gray-600 rounded focus:outline-none focus:border-white"
+              />
+            </div>
           </div>
 
+          <button
+            onClick={handleSignup}
+            className="w-full mt-6 bg-white text-black py-3 font-semibold rounded hover:bg-gray-300 transition"
+          >
+            Sign Up
+          </button>
         </div>
       </div>
     </div>
@@ -336,4 +185,3 @@ const Signup = () => {
 };
 
 export default Signup;
-

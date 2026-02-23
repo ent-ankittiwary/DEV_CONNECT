@@ -1,9 +1,8 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { addRequests, removeRequests } from "../utils/requestSlice";
-import { addConnections } from "../utils/connectionSlice";
 
 const Request = () => {
   const request = useSelector((store) => store.requests);
@@ -14,385 +13,143 @@ const Request = () => {
       const res = await axios.post(
         BASE_URL + "/request/review/" + status + "/" + _id,
         {},
-        { withCredentials: true },
+        { withCredentials: true }
       );
       dispatch(removeRequests(_id));
       alert(res.data.message);
-      //trial
-    } 
-    catch (err) {
+    } catch (err) {
       console.log(err.message);
     }
   };
 
   const fetchRequests = async () => {
     try {
-      const res = await axios.get(BASE_URL+"/interested/connections", {
-        withCredentials: true,
-      });
-      console.log(res);
-      if (res.data.data.length != 0) {
+      const res = await axios.get(
+        BASE_URL + "/interested/connections",
+        { withCredentials: true }
+      );
+
+      if (res.data?.data?.length > 0) {
         dispatch(addRequests(res.data.data));
       }
-        if (!request || request.length === 0) {
-    return <h1>No Connection Request found</h1>;
-  }
     } catch (err) {
-      // if (err.status === 404) {
-      alert("You have no connection Requests for now!");
-      console.log("No users have sent you a connection request");
-      // }
       console.log(err.message);
     }
   };
-  // if (!request) {
-  //   return <h1>No Connection Request Found</h1>;
-  // }
-  // if (request.length <= 0) {
-  //   return <h1>No Connection Request found</h1>;
-  // }
 
   useEffect(() => {
     fetchRequests();
   }, []);
 
+  if (!request || request.length === 0) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center text-white text-2xl">
+        No Incoming Requests
+      </div>
+    );
+  }
+
   return (
-    <div className="text-center my-10 px-2">
-      <h1 className="text-bold text-2xl mb-6">Incoming Request</h1>
+    <div className="min-h-screen bg-black text-white px-4 py-12">
+      <div className="max-w-5xl mx-auto">
 
-      {request &&
-        request.map((r) => {
-          const { name, age, photoUrl, gender, about, skills } = r.fromUserId;
+        {/* Page Title */}
+        <h1 className="text-3xl sm:text-4xl font-bold text-center mb-12">
+          Incoming Requests
+        </h1>
 
-          return (
-            <div
-              key={r._id}
-              className="
-              bg-base-200 rounded-lg p-4 mb-6
-              w-full sm:w-11/12 md:w-3/4 lg:w-1/2
-              mx-auto
-            "
-            >
-              {/* Main content */}
-              <div className="flex flex-col md:flex-row gap-6 items-start md:items-center">
-                {/* Avatar */}
-                <div className="flex-shrink-0 mx-auto md:mx-0">
-                  <img
-                    className="w-20 h-20 rounded-full"
-                    alt="User-Img"
-                    src={photoUrl}
-                  />
-                </div>
+        <div className="space-y-8">
 
-                {/* User info */}
-                <div className="text-left flex-1">
-                  <h2 className="font-bold text-xl">{name}</h2>
+          {request.map((r) => {
+            const { name, age, photoUrl, gender, about, skills } =
+              r.fromUserId || {};
 
-                  {age && gender && (
-                    <p className="font-medium text-sm">
-                      {age}, {gender}
-                    </p>
-                  )}
+            return (
+              <div
+                key={r._id}
+                className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl transition hover:border-zinc-700"
+              >
+                <div className="flex flex-col md:flex-row items-center gap-6">
 
-                  <p className="font-normal mt-1">{about}</p>
-                  <p className="font-light text-sm mt-1">{skills + ""}</p>
-                </div>
+                  {/* Avatar */}
+                  <div className="flex-shrink-0">
+                    <div className="w-24 h-24 rounded-full overflow-hidden border border-zinc-700">
+                      <img
+                        src={
+                          photoUrl ||
+                          "https://dummyimage.com/200x200/000/fff&text=User"
+                        }
+                        alt="User"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  </div>
 
-                {/* Action buttons */}
-                <div
-                  className="
-                flex flex-col md:flex-row
-                gap-3
-                justify-center
-                w-full md:w-auto
-              "
-                >
-                  <button
-                    className="btn btn-sm md:btn-md bg-red-700 text-white"
-                    onClick={() => {
-                      reviewRequest("rejected", r._id);
-                    }}
-                  >
-                    Reject
-                  </button>
+                  {/* User Info */}
+                  <div className="flex-1 text-center md:text-left space-y-2">
+                    <h2 className="text-xl font-semibold">
+                      {name}
+                    </h2>
 
-                  <button
-                    className="btn btn-sm md:btn-md bg-green-700 text-white"
-                    onClick={() => {
-                      reviewRequest("accepted", r._id);
-                    }}
-                  >
-                    Accept
-                  </button>
+                    {age && gender && (
+                      <p className="text-sm text-zinc-400">
+                        {age}, {gender}
+                      </p>
+                    )}
+
+                    {about && (
+                      <p className="text-sm text-zinc-300 leading-relaxed">
+                        {about}
+                      </p>
+                    )}
+
+                    {skills && (
+                      <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+                        {(Array.isArray(skills)
+                          ? skills
+                          : skills.split(",")
+                        ).map((skill, index) => (
+                          <span
+                            key={index}
+                            className="bg-zinc-800 text-xs px-3 py-1 rounded-full"
+                          >
+                            {skill.trim()}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Buttons */}
+                  <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                    <button
+                      onClick={() =>
+                        reviewRequest("rejected", r._id)
+                      }
+                      className="w-full sm:w-auto px-6 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition"
+                    >
+                      Reject
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        reviewRequest("accepted", r._id)
+                      }
+                      className="w-full sm:w-auto px-6 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-medium transition"
+                    >
+                      Accept
+                    </button>
+                  </div>
+
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+
+        </div>
+      </div>
     </div>
   );
 };
+
 export default Request;
-
-
-// import axios from "axios";
-// import React, { useEffect } from "react";
-// import { BASE_URL } from "../utils/constants";
-// import { useDispatch, useSelector } from "react-redux";
-// import { addRequests, removeRequests } from "../utils/requestSlice";
-
-// const Request = () => {
-//   const request = useSelector((store) => store.requests);
-//   const dispatch = useDispatch();
-
-//   const reviewRequest = async (status, _id) => {
-//     try {
-//       const res = await axios.post(
-//         BASE_URL + "/request/review/" + status + "/" + _id,
-//         {},
-//         { withCredentials: true }
-//       );
-//       dispatch(removeRequests(_id));
-//       alert(res.data.message);
-//     } catch (err) {
-//       console.log(err.message);
-//     }
-//   };
-
-//   const fetchRequests = async () => {
-//     try {
-//       const res = await axios.get(
-//         BASE_URL + "/interested/connections",
-//         { withCredentials: true }
-//       );
-
-//       if (res.data?.data?.length > 0) {
-//         dispatch(addRequests(res.data.data));
-//       }
-//     } catch (err) {
-//       if (err.response?.status === 404) {
-//         alert("You have no connection Requests for now!");
-//         console.log("No users have sent you a connection request");
-//       } else {
-//         alert("Something went wrong. Please try again.");
-//       }
-//       console.log(err.message);
-//     }
-//   };
-
-//   if (!request || request.length === 0) {
-//     return <h1>No Connection Request Found</h1>;
-//   }
-
-//   useEffect(() => {
-//     fetchRequests();
-//   }, []);
-
-//   return (
-//     <div className="text-center my-10 px-2">
-//       <h1 className="text-bold text-2xl mb-6">Incoming Request</h1>
-
-//       {request &&
-//         request.map((r) => {
-//           const { name, age, photoUrl, gender, about, skills } = r.fromUserId;
-
-//           return (
-//             <div
-//               key={r._id}
-//               className="
-//                 bg-base-200 rounded-lg p-4 mb-6
-//                 w-full sm:w-11/12 md:w-3/4 lg:w-1/2
-//                 mx-auto
-//               "
-//             >
-//               <div className="flex flex-col md:flex-row gap-6 items-start md:items-center">
-//                 <div className="flex-shrink-0 mx-auto md:mx-0">
-//                   <img
-//                     className="w-20 h-20 rounded-full"
-//                     alt="User-Img"
-//                     src={photoUrl}
-//                   />
-//                 </div>
-
-//                 <div className="text-left flex-1">
-//                   <h2 className="font-bold text-xl">{name}</h2>
-
-//                   {age && gender && (
-//                     <p className="font-medium text-sm">
-//                       {age}, {gender}
-//                     </p>
-//                   )}
-
-//                   <p className="font-normal mt-1">{about}</p>
-
-//                   <p className="font-light text-sm mt-1">
-//                     {Array.isArray(skills) ? skills.join(", ") : skills}
-//                   </p>
-//                 </div>
-
-//                 <div
-//                   className="
-//                     flex flex-col md:flex-row
-//                     gap-3
-//                     justify-center
-//                     w-full md:w-auto
-//                   "
-//                 >
-//                   <button
-//                     className="btn btn-sm md:btn-md bg-red-700 text-white"
-//                     onClick={() => reviewRequest("rejected", r._id)}
-//                   >
-//                     Reject
-//                   </button>
-
-//                   <button
-//                     className="btn btn-sm md:btn-md bg-green-700 text-white"
-//                     onClick={() => reviewRequest("accepted", r._id)}
-//                   >
-//                     Accept
-//                   </button>
-//                 </div>
-//               </div>
-//             </div>
-//           );
-//         })}
-//     </div>
-//   );
-// };
-
-// export default Request;
-
-
-
-// import axios from "axios";
-// import React, { useEffect } from "react";
-// import { BASE_URL } from "../utils/constants";
-// import { useDispatch, useSelector } from "react-redux";
-// import { addRequests, removeRequests } from "../utils/requestSlice";
-
-// const Request = () => {
-//   const request = useSelector((store) => store.requests);
-//   const dispatch = useDispatch();
-
-//   const reviewRequest = async (status, _id) => {
-//     try {
-//       const res = await axios.post(
-//         BASE_URL + "/request/review/" + status + "/" + _id,
-//         {},
-//         { withCredentials: true }
-//       );
-//       dispatch(removeRequests(_id));
-//       alert(res.data.message);
-//     } catch (err) {
-//       console.log(err.message);
-//     }
-//   };
-
-//   const fetchRequests = async () => {
-//     console.log(" fetchRequests CALLED");
-
-//     try {
-//       const res = await axios.get(
-//         BASE_URL + "/interested/connections", //  FIXED URL
-//         { withCredentials: true }
-//       );
-
-//       console.log(" API RESPONSE:", res.data);
-
-//       if (res.data?.data?.length > 0) {
-//         dispatch(addRequests(res.data.data));
-//       }
-//         if (!request || request.length === 0) {
-//     return <h1>No Connection Request found</h1>;
-//   }
-//     } catch (err) {
-//       if (err.response?.status === 404) {
-//         alert("You have no connection Requests for now!");
-//         console.log("No users have sent you a connection request");
-//       } else {
-//         alert("Something went wrong!");
-//       }
-//       console.log(err.message);
-//     }
-//   };
-
-//   // if (!request || request.length === 0) {
-//   //   return <h1>No Connection Request found</h1>;
-//   // }
-
-//   useEffect(() => {
-//     fetchRequests();
-//   }, []);
-
-//   return (
-//     <div className="text-center my-10 px-2">
-//       <h1 className="text-bold text-2xl mb-6">Incoming Request</h1>
-
-//       {request &&
-//         request.map((r) => {
-//           const { name, age, photoUrl, gender, about, skills } = r.fromUserId;
-
-//           return (
-//             <div
-//               key={r._id}
-//               className="
-//                 bg-base-200 rounded-lg p-4 mb-6
-//                 w-full sm:w-11/12 md:w-3/4 lg:w-1/2
-//                 mx-auto
-//               "
-//             >
-//               <div className="flex flex-col md:flex-row gap-6 items-start md:items-center">
-//                 <div className="flex-shrink-0 mx-auto md:mx-0">
-//                   <img
-//                     className="w-20 h-20 rounded-full"
-//                     alt="User-Img"
-//                     src={photoUrl}
-//                   />
-//                 </div>
-
-//                 <div className="text-left flex-1">
-//                   <h2 className="font-bold text-xl">{name}</h2>
-
-//                   {age && gender && (
-//                     <p className="font-medium text-sm">
-//                       {age}, {gender}
-//                     </p>
-//                   )}
-
-//                   <p className="font-normal mt-1">{about}</p>
-//                   <p className="font-light text-sm mt-1">
-//                     {Array.isArray(skills) ? skills.join(", ") : skills}
-//                   </p>
-//                 </div>
-
-//                 <div
-//                   className="
-//                     flex flex-col md:flex-row
-//                     gap-3
-//                     justify-center
-//                     w-full md:w-auto
-//                   "
-//                 >
-//                   <button
-//                     className="btn btn-sm md:btn-md bg-red-700 text-white"
-//                     onClick={() => reviewRequest("rejected", r._id)}
-//                   >
-//                     Reject
-//                   </button>
-
-//                   <button
-//                     className="btn btn-sm md:btn-md bg-green-700 text-white"
-//                     onClick={() => reviewRequest("accepted", r._id)}
-//                   >
-//                     Accept
-//                   </button>
-//                 </div>
-//               </div>
-//             </div>
-//           );
-//         })}
-//     </div>
-//   );
-// };
-
-// export default Request;
