@@ -1,5 +1,8 @@
+
+
+
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { addRequests, removeRequests } from "../utils/requestSlice";
@@ -8,6 +11,10 @@ const Request = () => {
   const request = useSelector((store) => store.requests);
   const dispatch = useDispatch();
 
+  const [loading, setLoading] = useState(true); // ✅ loading state
+
+  const requestArray = Array.isArray(request) ? request : [];
+
   const reviewRequest = async (status, _id) => {
     try {
       const res = await axios.post(
@@ -15,6 +22,7 @@ const Request = () => {
         {},
         { withCredentials: true }
       );
+
       dispatch(removeRequests(_id));
       alert(res.data.message);
     } catch (err) {
@@ -24,16 +32,22 @@ const Request = () => {
 
   const fetchRequests = async () => {
     try {
+      setLoading(true); // ✅ start loading
+
+      // ✅ clear old requests immediately
+      dispatch(addRequests([]));
+
       const res = await axios.get(
         BASE_URL + "/interested/connections",
         { withCredentials: true }
       );
 
-      if (res.data?.data?.length > 0) {
-        dispatch(addRequests(res.data.data));
-      }
+      dispatch(addRequests(res.data?.data || []));
     } catch (err) {
       console.log(err.message);
+      dispatch(addRequests([])); // ensure state cleared even on error
+    } finally {
+      setLoading(false); // ✅ stop loading
     }
   };
 
@@ -41,7 +55,19 @@ const Request = () => {
     fetchRequests();
   }, []);
 
-  if (!request || request.length === 0) {
+  /* =================== LOADING STATE =================== */
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center text-white text-xl">
+        Loading Requests...
+      </div>
+    );
+  }
+
+  /* =================== EMPTY STATE =================== */
+
+  if (requestArray.length === 0) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center text-white text-2xl">
         No Incoming Requests
@@ -49,18 +75,19 @@ const Request = () => {
     );
   }
 
+  /* =================== MAIN UI =================== */
+
   return (
     <div className="min-h-screen bg-black text-white px-4 py-12">
       <div className="max-w-5xl mx-auto">
 
-        {/* Page Title */}
         <h1 className="text-3xl sm:text-4xl font-bold text-center mb-12">
           Incoming Requests
         </h1>
 
         <div className="space-y-8">
+          {requestArray.map((r) => {
 
-          {request.map((r) => {
             const { name, age, photoUrl, gender, about, skills } =
               r.fromUserId || {};
 
@@ -87,9 +114,7 @@ const Request = () => {
 
                   {/* User Info */}
                   <div className="flex-1 text-center md:text-left space-y-2">
-                    <h2 className="text-xl font-semibold">
-                      {name}
-                    </h2>
+                    <h2 className="text-xl font-semibold">{name}</h2>
 
                     {age && gender && (
                       <p className="text-sm text-zinc-400">
@@ -123,18 +148,14 @@ const Request = () => {
                   {/* Buttons */}
                   <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
                     <button
-                      onClick={() =>
-                        reviewRequest("rejected", r._id)
-                      }
+                      onClick={() => reviewRequest("rejected", r._id)}
                       className="w-full sm:w-auto px-6 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition"
                     >
                       Reject
                     </button>
 
                     <button
-                      onClick={() =>
-                        reviewRequest("accepted", r._id)
-                      }
+                      onClick={() => reviewRequest("accepted", r._id)}
                       className="w-full sm:w-auto px-6 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-medium transition"
                     >
                       Accept
@@ -145,8 +166,8 @@ const Request = () => {
               </div>
             );
           })}
-
         </div>
+
       </div>
     </div>
   );

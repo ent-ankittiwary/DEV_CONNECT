@@ -95,6 +95,7 @@ import Logout from "./components/Logout";
 import Connection from "./components/Connection";
 import Request from "./components/Request";
 import LandingPage from "./components/LandingPage";
+import SentRequest from "./components/SentRequest";
 
 function App() {
   const user = useSelector((store) => store.user);
@@ -118,6 +119,7 @@ function App() {
           <Route path="/feed" element={<Feed />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/sent/requests" element={<SentRequest/>}/>
           <Route path="/interested/connections" element={<Request />} />
           <Route path="/accepted/connections" element={<Connection />} />
         </Route>

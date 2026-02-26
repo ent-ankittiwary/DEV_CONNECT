@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import signupbg from "../assets/signupbg.jpg";
 
@@ -58,7 +58,7 @@ const Signup = () => {
 
   return (
     <div
-      className="relative min-h-screen flex items-center justify-center bg-cover bg-center px-4"
+      className="relative min-h-screen flex items-start justify-center bg-cover bg-center bg-no-repeat pt-28 sm:pt-32 px-4 pb-12"
       style={{
         backgroundImage: `url(${signupbg})`, // ✅ FIXED HERE
       }}
@@ -122,7 +122,7 @@ const Signup = () => {
             </div>
 
             <div>
-              <label className="text-sm block mb-1">Photo URL</label>
+              <label className="text-sm block mb-1">Photo URL (Image Address)</label>
               <input
                 type="text"
                 value={photoUrl}
@@ -142,7 +142,7 @@ const Signup = () => {
             </div>
 
             <div className="sm:col-span-2">
-              <label className="text-sm block mb-1">Skills</label>
+              <label className="text-sm block mb-1">Skills (e.g: coding,development)</label>
               <input
                 type="text"
                 value={skills}
@@ -178,6 +178,12 @@ const Signup = () => {
           >
             Sign Up
           </button>
+            <p className="text-sm text-center mt-4">
+              Already a user?{" "}
+              <Link to="/login" className="underline hover:text-gray-300">
+                Sign In
+              </Link>
+            </p>
         </div>
       </div>
     </div>

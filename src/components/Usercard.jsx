@@ -3,7 +3,7 @@ import { BASE_URL } from "../utils/constants";
 import axios from "axios";
 import { removeUserFromFeed } from "../utils/feedSlice";
 
-const Usercard = ({ user }) => {
+const Usercard = ({ user, handleNext, handlePrevious, isFirst, isLast }) => {
   const dispatch = useDispatch();
   const { _id, name, age, photoUrl, gender, about, skills, email } = user;
 
@@ -40,7 +40,7 @@ const Usercard = ({ user }) => {
             <h2 className="text-2xl font-bold text-white">{name}</h2>
             {age && gender && (
               <p className="text-gray-400 text-sm">
-                {age}, {gender}
+                {age}, {gender}, {email}
               </p>
             )}
           </div>
@@ -81,6 +81,28 @@ const Usercard = ({ user }) => {
               className="flex-1 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold transition"
             >
               Interested
+            </button>
+          </div>
+          {/* <div className="join grid grid-cols-2">
+            <button onClick={()=>handlePrevious} className="join-item btn btn-outline">« Previous</button>
+            <button onClick={()=>handleNext} className="join-item btn btn-outline">Next »</button>
+          </div> */}
+
+          <div className="grid grid-cols-2 gap-3 pt-4">
+            <button
+              onClick={handlePrevious}
+              disabled={isFirst}
+              className="py-2 rounded-lg border border-gray-600 text-white disabled:opacity-40"
+            >
+              « Previous
+            </button>
+
+            <button
+              onClick={handleNext}
+              disabled={isLast}
+              className="py-2 rounded-lg border border-gray-600 text-white disabled:opacity-40"
+            >
+              Next »
             </button>
           </div>
         </div>

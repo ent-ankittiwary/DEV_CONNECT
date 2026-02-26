@@ -35,7 +35,7 @@ const Connection = () => {
 
   useEffect(() => {
     fetchConnections();
-  }, [connections]);
+  }, []);
 
   if (!Array.isArray(connections)) return null;
 

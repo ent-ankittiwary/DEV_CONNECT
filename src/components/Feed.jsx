@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,6 +11,21 @@ const Feed = () => {
   const feed = useSelector((store) => store.feed);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const feedArray = Array.isArray(feed) ? feed : [];
+  const handleNext = () => {
+    if (currentIndex < feedArray.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    }
+  };
+
+
+  const handlePrevious = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
 
   const getFeed = async () => {
     try {
@@ -30,34 +45,36 @@ const Feed = () => {
 
   if (!feed) return;
 
-  if (feed.length <= 0)
+  if (feedArray.length <= 0)
     return (
       <div className="min-h-screen flex items-center justify-center bg-black text-white text-4xl font-bold">
         You have viewed all users
       </div>
     );
+  // const totalFeed = feed.length;
+  // const randomNo = Math.floor(Math.random()*totalFeed);
 
- return (
+  return (
   <div className="min-h-screen bg-black text-white px-4 py-12">
+    <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-start justify-center gap-12">
 
-    {/* <h1 className="text-3xl sm:text-4xl font-bold text-center mb-12">
-      Discover Developers
-    </h1> */}
-
-    <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-center gap-12">
-
-      {/* User Card */}
+      {/* USER CARD */}
       <div className="w-full lg:w-1/2 flex justify-center">
-        <Usercard user={feed[0]} />
+        <Usercard
+          user={feedArray[currentIndex]}
+          handleNext={handleNext}
+          handlePrevious={handlePrevious}
+          isFirst={currentIndex === 0}
+          isLast={currentIndex === feedArray.length - 1}
+        />
       </div>
 
-      {/* Review Section */}
-      <div className="w-full lg:w-1/2 flex justify-center">
-        <Review toUserId={feed[0]._id} />
+      {/* REVIEW SECTION */}
+      <div className="w-full lg:w-1/2">
+        <Review toUserId={feedArray[currentIndex]?._id} />
       </div>
 
     </div>
-
   </div>
 );
 };

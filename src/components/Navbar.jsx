@@ -96,7 +96,16 @@ function Navbar() {
                       onClick={() => setOpen(false)}
                       className="block px-3 py-2 hover:bg-gray-800 rounded"
                     >
-                      🫂 Connections
+                      👥 Connections
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/sent/requests"
+                      onClick={() => setOpen(false)}
+                      className="block px-3 py-2 hover:bg-gray-800 rounded"
+                    >
+                      ✅ Sent Requests
                     </Link>
                   </li>
                   <li>
@@ -105,7 +114,7 @@ function Navbar() {
                       onClick={() => setOpen(false)}
                       className="block px-3 py-2 hover:bg-gray-800 rounded"
                     >
-                      🫴 Incoming Requests
+                      📡 Incoming Requests
                     </Link>
                   </li>
                   <li>
