@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { addRequests, removeRequests } from "../utils/requestSlice";
+import { increaseFollowers } from "../utils/userSlice";
 
 const Request = () => {
   const request = useSelector((store) => store.requests);
@@ -15,20 +16,37 @@ const Request = () => {
 
   const requestArray = Array.isArray(request) ? request : [];
 
-  const reviewRequest = async (status, _id) => {
+  const handleAcceptedRequest = async (status,r) => {
     try {
       const res = await axios.post(
-        BASE_URL + "/request/review/" + status + "/" + _id,
+        BASE_URL + "/request/review/" + status + "/" + r.fromUserId._id,
         {},
         { withCredentials: true }
       );
-
-      dispatch(removeRequests(_id));
       alert(res.data.message);
+      dispatch(removeRequests(r._id));
+      dispatch(increaseFollowers());
     } catch (err) {
       console.log(err.message);
     }
   };
+
+  const handleRejectedStatus=async(status,r)=>{
+    try {
+      const res = await axios.post(
+        BASE_URL + "/request/review/" + status + "/" + r.fromUserId._id,
+        {},
+        { withCredentials: true }
+      );
+
+      dispatch(removeRequests(r._id));
+      // dispatch(increaseFollowers());
+      alert(res.data.message);
+    } catch (err) {
+      console.log(err.message);
+    }
+
+  }
 
   const fetchRequests = async () => {
     try {
@@ -148,14 +166,14 @@ const Request = () => {
                   {/* Buttons */}
                   <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
                     <button
-                      onClick={() => reviewRequest("rejected", r._id)}
+                      onClick={() => handleRejectedStatus("rejected", r)}
                       className="w-full sm:w-auto px-6 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition"
                     >
                       Reject
                     </button>
 
                     <button
-                      onClick={() => reviewRequest("accepted", r._id)}
+                      onClick={() => handleAcceptedRequest("accepted", r)}
                       className="w-full sm:w-auto px-6 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-medium transition"
                     >
                       Accept

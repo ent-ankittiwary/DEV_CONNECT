@@ -3,40 +3,40 @@ import React, { useEffect } from "react";
 import { BASE_URL } from "../utils/constants";
 import { addConnections, removeConnection } from "../utils/connectionSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { decreaseFollowers } from "../utils/userSlice";
+import { decreaseFollowing } from "../utils/userSlice";
 
-const Connection = () => {
+const Followings = () => {
   const dispatch = useDispatch();
   const connections = useSelector((store) => store.connections);
   const user = useSelector((store) => store.user);
 
-  const fetchConnections = async () => {
+  const fetchfollowings = async () => {
     try {
-      const res = await axios.get(BASE_URL + "/accepted/followers", {
+      const res = await axios.get(BASE_URL + "/accepted/followings", {
         withCredentials: true,
       });
-      dispatch(addConnections(res?.data?.data));
+      dispatch(addConnections(res?.data?.data)); // store a connectionModel documentObject
     } catch (err) {
       console.log(err.message);
     }
   };
 
-  const handleDeleteFollowers = async (connection) => {
+  const handleDeleteFollowings = async (connection) => {
     try {
       const res = await axios.delete(
-        BASE_URL +"/delete/followers/"+connection.fromUserId._id,
+        BASE_URL +"/delete/followings/"+connection.toUserId._id,
         { withCredentials: true },
       );
       alert(res.data.message);
       dispatch(removeConnection(connection._id));
-      dispatch(decreaseFollowers());
+      dispatch(decreaseFollowing())
     } catch (err) {
       console.log(err.message);
     }
   };
 
   useEffect(() => {
-    fetchConnections();
+    fetchfollowings();
   }, []);
 
   if (!Array.isArray(connections)) return null;
@@ -56,7 +56,7 @@ const Connection = () => {
       <div className="max-w-5xl mx-auto">
         {/* Page Title */}
         <h1 className="text-3xl sm:text-4xl font-bold text-center mb-12">
-          My Followers
+          My Followings
         </h1>
 
         {/* Connection Cards */}
@@ -66,11 +66,22 @@ const Connection = () => {
 
             const connectionId = connection._id;
 
-            // const toId = String(connection.fromUserId._id); //loggedInUser
-            // const fromId = String(connection.toUserId._id); // otherUser
+            // const toId = String(connection.fromUserId._id);
+            // const fromId = String(connection.toUserId._id);
             // const loggedInId = String(user._id);
 
-            const { name, age, photoUrl, gender, about, skills } = connection.fromUserId;
+            // let otherUser = null;
+
+            // if (fromId === loggedInId) {
+            //   otherUser = toId
+            // } 
+            // else {
+            //   return null;
+            // }
+
+            // if (!otherUser) return null;
+
+            const { name, age, photoUrl, gender, about, skills } = connection.toUserId;
 
             return (
               <div
@@ -130,7 +141,7 @@ const Connection = () => {
                   {/* Remove Button */}
                   <div className="w-full md:w-auto">
                     <button
-                      onClick={() =>handleDeleteFollowers(connection)}
+                      onClick={() => handleDeleteFollowings(connection)}
                       className="w-full md:w-auto px-6 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition"
                     >
                       Remove
@@ -146,4 +157,4 @@ const Connection = () => {
   );
 };
 
-export default Connection;
+export default Followings;;

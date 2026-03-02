@@ -9,7 +9,8 @@ const connectionSlice = createSlice({
             return action.payload;
         },
         removeConnection:(state,action)=>{
-            return null;
+            const newArray = state.filter((r)=> r._id!= action.payload); //action.payload is the _id passed to it
+            return newArray //This will return array of  where This request will not be presnt
         }
 
         

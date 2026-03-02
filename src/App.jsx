@@ -96,6 +96,7 @@ import Connection from "./components/Connection";
 import Request from "./components/Request";
 import LandingPage from "./components/LandingPage";
 import SentRequest from "./components/SentRequest";
+import Followings from "./components/Followings";
 
 function App() {
   const user = useSelector((store) => store.user);
@@ -121,7 +122,8 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/sent/requests" element={<SentRequest/>}/>
           <Route path="/interested/connections" element={<Request />} />
-          <Route path="/accepted/connections" element={<Connection />} />
+          <Route path="/accepted/followers" element={<Connection />} />
+          <Route path="/accepted/followings" element={<Followings/>}/>
         </Route>
 
         {/* 404 */}
