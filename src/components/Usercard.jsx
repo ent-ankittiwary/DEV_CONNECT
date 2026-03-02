@@ -3,9 +3,20 @@ import { BASE_URL } from "../utils/constants";
 import axios from "axios";
 import { removeUserFromFeed } from "../utils/feedSlice";
 
-const Usercard = ({ user, handleNext, handlePrevious, isFirst, isLast }) => {
+const Usercard = ({ user, handleNext, handlePrevious, isFirst, isLast,disableActions = false }) => {
   const dispatch = useDispatch();
-  const { _id, name, age, photoUrl, gender, about, skills, email } = user;
+  const {
+    _id,
+    name,
+    age,
+    photoUrl,
+    gender,
+    about,
+    skills,
+    email,
+    followersCount,
+    followingCount,
+  } = user;
 
   const HandleSendRequest = async (status, _id) => {
     try {
@@ -32,6 +43,48 @@ const Usercard = ({ user, handleNext, handlePrevious, isFirst, isLast }) => {
             alt="User"
             className="w-full h-full object-cover"
           />
+        </div>
+        {/*Buttons*/}
+        <div className="grid grid-cols-2 gap-4 pt-4 w-full">
+          <button
+            className="
+      flex flex-col items-center justify-center
+      py-3 px-2
+      rounded-xl
+      bg-zinc-800
+      border border-zinc-700
+      text-white
+      hover:bg-zinc-700
+      transition
+      duration-200
+      ease-in-out
+      disabled:opacity-40
+      disabled:cursor-not-allowed
+    "
+          >
+            <span className="text-lg font-semibold">{followingCount}</span>
+            <span className="text-sm text-gray-400">Followings</span>
+          </button>
+
+          <button
+            className="
+      flex flex-col items-center justify-center
+      py-3 px-2
+      rounded-xl
+      bg-zinc-800
+      border border-zinc-700
+      text-white
+      hover:bg-zinc-700
+      transition
+      duration-200
+      ease-in-out
+      disabled:opacity-40
+      disabled:cursor-not-allowed
+    "
+          >
+            <span className="text-lg font-semibold">{followersCount}</span>
+            <span className="text-sm text-gray-400">Followers</span>
+          </button>
         </div>
 
         {/* Content */}
@@ -70,18 +123,31 @@ const Usercard = ({ user, handleNext, handlePrevious, isFirst, isLast }) => {
           {/* Buttons */}
           <div className="flex gap-4 pt-4">
             <button
-              onClick={() => HandleSendRequest("ignored", _id)}
-              className="flex-1 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-semibold transition"
+              disabled={disableActions}
+              onClick={() =>
+                !disableActions && HandleSendRequest("ignored", _id)
+              }
+              className={`flex-1 py-2 rounded-lg font-semibold transition
+  ${
+    disableActions
+      ? "bg-gray-600 cursor-not-allowed opacity-50"
+      : "bg-red-600 hover:bg-red-700 text-white"
+  }`}
             >
               Ignore
             </button>
 
-            <button
-              onClick={() => HandleSendRequest("interested", _id)}
-              className="flex-1 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold transition"
-            >
-              Interested
-            </button>
+            <button 
+  disabled={disableActions}
+  onClick={() => !disableActions && HandleSendRequest("interested", _id)}
+  className={`flex-1 py-2 rounded-lg font-semibold transition
+  ${disableActions 
+    ? "bg-gray-600 cursor-not-allowed opacity-50" 
+    : "bg-green-600 hover:bg-green-700 text-white"
+  }`}
+>
+  Interested
+</button>
           </div>
           {/* <div className="join grid grid-cols-2">
             <button onClick={()=>handlePrevious} className="join-item btn btn-outline">« Previous</button>
