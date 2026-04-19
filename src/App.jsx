@@ -12,6 +12,7 @@ import Request from "./components/Request";
 import LandingPage from "./components/LandingPage";
 import SentRequest from "./components/SentRequest";
 import Followings from "./components/Followings";
+import Chat from "./components/Chat";
 
 function App() {
   const user = useSelector((store) => store.user);
@@ -39,6 +40,7 @@ function App() {
           <Route path="/interested/connections" element={<Request />} />
           <Route path="/accepted/followers" element={<Connection />} />
           <Route path="/accepted/followings" element={<Followings/>}/>
+          <Route path="/chat/:targetUserId" element ={<Chat/>}/>
         </Route>
 
         {/* 404 */}

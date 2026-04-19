@@ -4,6 +4,7 @@ import { BASE_URL } from "../utils/constants";
 import { addConnections, removeConnection } from "../utils/connectionSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { decreaseFollowers } from "../utils/userSlice";
+import { Link } from "react-router-dom";
 
 const Connection = () => {
   const dispatch = useDispatch();
@@ -70,7 +71,7 @@ const Connection = () => {
             // const fromId = String(connection.toUserId._id); // otherUser
             // const loggedInId = String(user._id);
 
-            const { name, age, photoUrl, gender, about, skills } = connection.fromUserId;
+            const { _id,name, age, photoUrl, gender, about, skills } = connection.fromUserId;
 
             return (
               <div
@@ -135,6 +136,14 @@ const Connection = () => {
                     >
                       Remove
                     </button>
+                    <Link to={"/chat/"+_id}>
+                      <button
+                      className="w-full md:w-auto px-6 py-2 rounded-lg bg-green-600 hover:bg-green-900 text-white font-medium transition"
+                    >
+                      Chat
+                    </button>
+                    </Link>
+ 
                   </div>
                 </div>
               </div>

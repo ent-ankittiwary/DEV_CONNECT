@@ -4,6 +4,7 @@ import { BASE_URL } from "../utils/constants";
 import { addConnections, removeConnection } from "../utils/connectionSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { decreaseFollowing } from "../utils/userSlice";
+import { Link } from "react-router-dom";
 
 const Followings = () => {
   const dispatch = useDispatch();
@@ -81,7 +82,7 @@ const Followings = () => {
 
             // if (!otherUser) return null;
 
-            const { name, age, photoUrl, gender, about, skills } = connection.toUserId;
+            const { _id,name, age, photoUrl, gender, about, skills } = connection.toUserId;
 
             return (
               <div
@@ -146,6 +147,13 @@ const Followings = () => {
                     >
                       Remove
                     </button>
+                      <Link to={"/chat/"+_id}>
+                      <button
+                      className="w-full md:w-auto px-6 py-2 rounded-lg bg-green-600 hover:bg-green-900 text-white font-medium transition"
+                    >
+                      Chat
+                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>
